@@ -50,28 +50,24 @@ fn check_needles(line: &[u8], check_func: fn(&[u8], &[u8]) -> bool) -> Option<is
         .map(|num| map_numbers_to_digits(num))
         .next()
 }
-fn scan_forward(line: &[u8]) -> isize {
-    for i in 0..line.len() {
-        if let Some(x) = check_needles(&line[i..], |line, needle| line.starts_with(needle)) {
-            return x;
-        }
-    }
-    panic!("didnt match any needles");
+fn scan<'a, T: IntoIterator<Item = &'a [u8]>>(iter: T) -> isize {
+    iter.into_iter()
+        .filter_map(|haystack| check_needles(haystack, |line, needle| line.starts_with(needle)))
+        .next()
+        .expect("failed to match forward")
 }
-fn scan_back(line: &[u8]) -> isize {
-    for i in (0..line.len()).rev() {
-        if let Some(x) = check_needles(&line[..i + 1], |line, needle| line.ends_with(needle)) {
-            return x;
-        }
-    }
-    panic!("didnt match any needles");
-}
+
 #[aoc(day1, part2)]
 fn part2(input: &[String]) -> isize {
     input
         .into_iter()
         .map(|line| line.as_bytes())
-        .filter_map(|line| Some(scan_forward(line) * 10 + scan_back(line)))
+        .filter_map(|line| {
+            Some(
+                scan((0..line.len()).map(|idx| &line[idx..])) * 10
+                    + scan((0..line.len()).rev().map(|idx| &line[idx..])),
+            )
+        })
         .sum()
 }
 
@@ -90,13 +86,14 @@ mod tests {
             )),
             142
         );
-        assert_eq!(part1(&parse(include_str!("../input/2023/day1.txt").trim_end())), 54927);
+        assert_eq!(
+            part1(&parse(include_str!("../input/2023/day1.txt").trim_end())),
+            54927
+        );
     }
 
     #[test]
     fn part2_example() {
-        assert_eq!(scan_forward(b"eight"), 8);
-        assert_eq!(scan_back(b"eight"), 8);
         assert_eq!(
             part2(&parse(
                 "two1nine
@@ -112,7 +109,9 @@ mod tests {
 
         assert_eq!(part2(&parse("eighthree")), 83);
         assert_eq!(part2(&parse("sevenine")), 79);
-        assert_eq!(part2(&parse(include_str!("../input/2023/day1.txt").trim_end())), 54581);
-
+        assert_eq!(
+            part2(&parse(include_str!("../input/2023/day1.txt").trim_end())),
+            54581
+        );
     }
 }
