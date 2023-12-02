@@ -19,7 +19,7 @@ fn part1(input: &[String]) -> isize {
         .sum()
 }
 
-fn map_numbers_to_digits(num: &[u8]) -> isize {
+fn map_word_to_num(num: &[u8]) -> isize {
     match num {
         b"zero" => 0,
         b"one" => 1,
@@ -47,7 +47,7 @@ fn check_needles(line: &[u8], check_func: fn(&[u8], &[u8]) -> bool) -> Option<is
     NEEDLES
         .into_iter()
         .filter(|needle| check_func(line, needle))
-        .map(|num| map_numbers_to_digits(num))
+        .map(|num| map_word_to_num(num))
         .next()
 }
 fn scan<'a, T: IntoIterator<Item = &'a [u8]>>(iter: T) -> isize {
