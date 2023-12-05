@@ -1,4 +1,8 @@
-use std::{collections::HashMap, ops::{Add, BitOr}, str::FromStr};
+use std::{
+    collections::HashMap,
+    ops::{Add, BitOr},
+    str::FromStr,
+};
 
 use aoc_parse::{parser, prelude::*};
 use aoc_runner_derive::{aoc, aoc_generator};
@@ -40,7 +44,6 @@ impl BitOr for ColorSet {
         }
     }
 }
-
 
 impl FromStr for ColorSet {
     type Err = ();
@@ -118,15 +121,19 @@ impl FromStr for Game {
 
 impl Game {
     fn is_possible_part_1(&self) -> bool {
-        self.shown.iter().all(|ColorSet { red, blue, green }| {
-            *red <= 12 && *blue <= 14 && *green <= 13
-        })
+        self.shown
+            .iter()
+            .all(|ColorSet { red, blue, green }| *red <= 12 && *blue <= 14 && *green <= 13)
     }
 
     fn minimum_cubes_part_2(&self) -> usize {
-        let maximized = self.shown.iter().copied().reduce(|sum, next| sum | next).expect("game didnt contain at least colorset");
+        let maximized = self
+            .shown
+            .iter()
+            .copied()
+            .reduce(|sum, next| sum | next)
+            .expect("game didnt contain at least colorset");
         maximized.red * maximized.blue * maximized.green
-
     }
 }
 
@@ -152,10 +159,10 @@ fn part1(input: &[Game]) -> String {
 #[aoc(day2, part2)]
 fn part2(input: &[Game]) -> String {
     input
-    .into_iter()
-    .map(|game| game.minimum_cubes_part_2())
-    .sum::<usize>()
-    .to_string()
+        .into_iter()
+        .map(|game| game.minimum_cubes_part_2())
+        .sum::<usize>()
+        .to_string()
 }
 
 #[cfg(test)]
@@ -174,7 +181,10 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"
             )),
             "8"
         );
-        assert_eq!(part1(&parse(include_str!("../input/2023/day2.txt").trim_end())), "2810");
+        assert_eq!(
+            part1(&parse(include_str!("../input/2023/day2.txt").trim_end())),
+            "2810"
+        );
     }
 
     #[test]
@@ -189,7 +199,9 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"
             )),
             "2286"
         );
-        assert_eq!(part2(&parse(include_str!("../input/2023/day2.txt").trim_end())), "69110");
-
+        assert_eq!(
+            part2(&parse(include_str!("../input/2023/day2.txt").trim_end())),
+            "69110"
+        );
     }
 }
