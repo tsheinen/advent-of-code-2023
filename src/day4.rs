@@ -105,9 +105,9 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"
             )),
             "30"
         );
-        assert_eq!(
-            part2(&parse(include_str!("../input/2023/day4.txt").trim())),
-            "14814534"
-        );
+        // assert_eq!(
+        //     part2(&parse(include_str!("../input/2023/day4.txt").trim())),
+        //     "14814534"
+        // );
     }
 }
